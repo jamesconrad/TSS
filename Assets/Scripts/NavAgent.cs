@@ -75,7 +75,7 @@ public class NavAgent : MonoBehaviour
             //formula: movespeed = 0.5cos(x/30)+0.5
             float MoveForce = Mathf.Clamp01((0.5f * Mathf.Cos(angleOffset/30) + 0.5f) * MaxMoveForce);
             Vector2 moveForceVector = vectorToNextPointNormalised * MoveForce;
-            print("MoveForce: " + MoveForce);
+            //print("MoveForce: " + MoveForce);
             Debug.DrawRay(transform.position, moveForceVector, Color.yellow);
             rb2d.AddForce(moveForceVector, ForceMode2D.Force);
         }

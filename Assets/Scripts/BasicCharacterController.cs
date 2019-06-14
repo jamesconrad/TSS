@@ -4,28 +4,56 @@ using UnityEngine;
 
 public class BasicCharacterController : MonoBehaviour {
 
+    public float moveForce = 1;
+    public float rotationSpeed = 1;
+
+
+    private Rigidbody2D rb2d;
+
 	// Use this for initialization
 	void Start () {
-		
+        rb2d = GetComponent<Rigidbody2D>();
 	}
 	
-	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
     {
-        //quick and dirty movement for now
+        Vector2 moveVector = new Vector2(0, 0);
         if (Input.GetKey(KeyCode.W))
-            transform.position -= new Vector3(0.0f, -0.1f, 0.0f);
+            moveVector.y += 1;
         if (Input.GetKey(KeyCode.A))
-            transform.position -= new Vector3(0.1f, 0.0f, 0.0f);
+            moveVector.x -= 1;
         if (Input.GetKey(KeyCode.S))
-            transform.position -= new Vector3(0.0f, 0.1f, 0.0f);
+            moveVector.y -= 1;
         if (Input.GetKey(KeyCode.D))
-            transform.position -= new Vector3(-0.1f, 0.0f, 0.0f);
+            moveVector.x += 1;
+        moveVector.Normalize(); ;
 
-        Vector3 mousePos = transform.worldToLocalMatrix * Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        float lookAngle = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * Mathf.Rad2Deg;
-        //transform.localEulerAngles = new Vector3(0, 0, lookAngle);
-        transform.GetChild(0).rotation = Quaternion.Euler(0.0f, 0.0f, lookAngle - 90);
-        //GetComponentInChildren<LightSource>().Angle = lookAngle;
+        Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 lookVector = (mousePoint - transform.position).normalized;
+
+        Debug.DrawRay(transform.position, lookVector, Color.red);
+        Debug.DrawRay(transform.position, transform.up, Color.blue);
+        //Debug.DrawLine(transform.position, transform.up, Color.red);
+
+        //determine difference from look direction to our current direction
+        float lookAngleOffset = Vector2.SignedAngle(lookVector, (Vector2)transform.up);
+        rb2d.MoveRotation(transform.rotation * Quaternion.AngleAxis((-lookAngleOffset * Time.fixedDeltaTime) / 0.1f, Vector3.forward));
+
+        //determine difference from the way we want to move to our current direction
+        float moveAngleOffset = Vector2.SignedAngle(moveVector, (Vector2)transform.up);
+        float adjustedMoveForce = 0;
+
+        if (moveAngleOffset > 90 || moveAngleOffset < -90)//moving backwards or backsideways
+        {
+            float modifiedAngle = Mathf.Abs(moveAngleOffset) - 180;
+            adjustedMoveForce = Mathf.Clamp01((0.5f * Mathf.Cos(modifiedAngle / 60) + 0.5f) * moveForce) * 0.5f;
+        }
+        else//moving forward or sideways
+        {
+            adjustedMoveForce = Mathf.Clamp01((0.5f * Mathf.Cos(moveAngleOffset / 60) + 0.5f) * moveForce);
+        }
+
+        rb2d.AddForce(moveVector * adjustedMoveForce, ForceMode2D.Impulse);
+
     }
 }
