@@ -41,7 +41,7 @@ public class BasicCharacterController : MonoBehaviour {
 
         //determine difference from the way we want to move to our current direction
         float moveAngleOffset = Vector2.SignedAngle(moveVector, (Vector2)transform.up);
-        float adjustedMoveForce = 0;
+        float adjustedMoveForce;
 
         if (moveAngleOffset > 90 || moveAngleOffset < -90)//moving backwards or backsideways
         {

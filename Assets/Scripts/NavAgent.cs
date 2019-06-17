@@ -82,13 +82,13 @@ public class NavAgent : MonoBehaviour
     }
 
 
-    public void SetDestination(Vector2 destination)
+    public bool SetDestination(Vector2 destination)
     {
         this.destination = destination;
-        CalculatePath();
+        return CalculatePath();
     }
 
-    private void CalculatePath()
+    private bool CalculatePath()
     {
         NavMeshQueryFilter filter = new NavMeshQueryFilter
         {
@@ -99,5 +99,6 @@ public class NavAgent : MonoBehaviour
 
         PathPoints.Clear();
         PathPoints.AddRange(path3D.corners.Select(x => (Vector2)x));
+        return result;
     }
 }
