@@ -65,7 +65,9 @@ public class Weapon : MonoBehaviour {
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         bulletScript.damage = gun.damage;
         bulletScript.ammo = gun.ammotype;
+        bulletScript.direction = bulletDir;
         bullet.GetComponent<Rigidbody2D>().AddForce(new Vector2(bulletDir.x, bulletDir.y) * gun.muzzleVelocity, ForceMode2D.Impulse);
+        bulletScript.velocity = bullet.GetComponent<Rigidbody2D>().velocity.magnitude;
 
         gun.curammo -= gun.ammopershot;
 
