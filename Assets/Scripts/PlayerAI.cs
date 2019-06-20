@@ -32,6 +32,7 @@ public class PlayerAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        zombieParent = transform.parent;
         rb2d = transform.GetComponentInChildren<Rigidbody2D>();
         weapon = transform.GetComponentInChildren<Weapon>();
         navAgent = transform.GetComponentInChildren<NavAgent>();

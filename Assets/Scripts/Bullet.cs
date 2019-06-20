@@ -51,13 +51,14 @@ public class Bullet : MonoBehaviour
             Debug.DrawRay(collision.GetContact(0).point, direction, Color.red, 10);
 
             if (impactAngle > 45)
-                rigidbody.velocity = Vector3.Reflect(vel, normal) * velocity;
+            {
+                direction = rigidbody.velocity = Vector3.Reflect(vel, normal) * velocity;
+            }
             else
             {
-                damage /= 4;
-                if (damage > 1)
-                    PenetrateObject(collision);
-                else
+                float distance = PenetrateObject(collision);
+                damage /= (1 + distance) * 4;
+                if (damage < 1)
                     Destroy(gameObject);
                 
             }
@@ -78,13 +79,15 @@ public class Bullet : MonoBehaviour
         return hitInfo.point;
     }
 
-    private void PenetrateObject(Collision2D collision)
+    private float PenetrateObject(Collision2D collision)
     {
         Vector3 oppositePoint = OppositeImpactPoint(collision);
+        Vector3 originalPoint = transform.position;
         transform.position = oppositePoint;
 
         Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
         rigidbody.velocity = direction * velocity;
+        return (oppositePoint - originalPoint).magnitude;
     }
 
     private void OnDestroy()
