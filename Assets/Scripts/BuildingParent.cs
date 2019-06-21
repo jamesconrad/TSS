@@ -7,7 +7,6 @@ public class BuildingParent : MonoBehaviour
     //Can only construct box shaped buildings
     public Vector2Int sizeInTiles = new Vector2Int(2,2);
     public Bounds bounds;
-
     private Vector2 tileSize;
     private Vector2[] tileCenters;
     private float[] tileStrengths;
@@ -66,17 +65,26 @@ public class BuildingParent : MonoBehaviour
 
     float CalculatePointStrength(Vector2 point)
     {
+        Vector2[] directions = { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
         float strength = 0;
-        for (int i = 0; i < children.Length; i++)
+
+        for (int i = 0; i < 4; i++)
         {
-            strength += Mathf.Max(0, children[i].strength);
+            RaycastHit2D hit = Physics2D.Raycast(point, directions[i], bounds.max.magnitude, ~LayerMask.NameToLayer("BuildingSupport"));
+            if (hit.transform != null)
+            {
+                float hitStrength = hit.transform.GetComponent<RoofSupport>().strength;
+                strength += Mathf.Max(0, (hit.distance * hit.distance) / (-hitStrength * hitStrength) + 1);
+            }
         }
 
-        return strength/children.Length;
+        return Mathf.Max(0,strength);//children.Length;
     }
+
     void OnDrawGizmos()
     {
-        for (int i = 0; i < tileCenters.Length; i++)
-            UnityEditor.Handles.Label(tileCenters[i], tileStrengths[i].ToString());
+        if (tileCenters != null)
+            for (int i = 0; i < tileCenters.Length; i++)
+                UnityEditor.Handles.Label(tileCenters[i], tileStrengths[i].ToString());
     }
 }

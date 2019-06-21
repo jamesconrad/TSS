@@ -52,7 +52,7 @@ public class Bullet : MonoBehaviour
 
             if (impactAngle > 45)
             {
-                direction = rigidbody.velocity = Vector3.Reflect(vel, normal) * velocity;
+                direction = (rigidbody.velocity = Vector3.Reflect(vel, normal) * velocity).normalized;
             }
             else
             {
@@ -65,16 +65,22 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        transform.DetachChildren();
+    }
+
     private Vector3 OppositeImpactPoint(Collision2D collision)
     {
         Bounds hitBounds = collision.collider.bounds;
-        float approxMaxDiameter = (hitBounds.max - hitBounds.min).magnitude;
+        //float approxMaxDiameter = (hitBounds.max - hitBounds.min).magnitude;
+        float approxMaxDiameter = (hitBounds.extents * 2 * direction).magnitude * 2;
         LayerMask oldMask = collision.collider.gameObject.layer;
         collision.collider.gameObject.layer = LayerMask.NameToLayer("TEMP_RAYCAST");
-        RaycastHit2D hitInfo = Physics2D.Raycast(collision.GetContact(0).point + approxMaxDiameter * direction, -direction, 100/*, LayerMask.NameToLayer("TEMP_RAYCAST")*/);
+        RaycastHit2D hitInfo = Physics2D.Raycast(collision.GetContact(0).point + approxMaxDiameter * direction, -direction, approxMaxDiameter, ~LayerMask.NameToLayer("TEMP_RAYCAST"));
         collision.collider.gameObject.layer = oldMask;
         Debug.DrawRay(hitInfo.point, direction, Color.yellow, 10);
-        DrawArrow(collision.GetContact(0).point + approxMaxDiameter * direction, -direction, 10, Color.cyan);
+        DrawArrow(collision.GetContact(0).point + approxMaxDiameter * direction, -direction * approxMaxDiameter, 10, Color.cyan);
         print(hitInfo.collider.name);
         return hitInfo.point;
     }
@@ -88,11 +94,6 @@ public class Bullet : MonoBehaviour
         Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
         rigidbody.velocity = direction * velocity;
         return (oppositePoint - originalPoint).magnitude;
-    }
-
-    private void OnDestroy()
-    {
-        transform.DetachChildren();
     }
 
     void DrawArrow(Vector3 pos, Vector3 direction, float duration, Color color, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RoofSupport : MonoBehaviour {
 
+    [Tooltip("When distance = strength, impact will be 0")]
     public float strength = 1;
     //worldspace, 0 is max, 1 is min
     public Vector2[] wallPoints;

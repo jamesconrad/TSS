@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &10764492
 Transform:
   m_ObjectHideFlags: 0
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 165365498}
   - component: {fileID: 165365497}
   - component: {fileID: 165365496}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Square (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ca32cc3e14820418dd06dd7b36b517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 1
+  strength: 2
   wallPoints: []
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -504,7 +504,7 @@ GameObject:
   - component: {fileID: 467946105}
   - component: {fileID: 467946104}
   - component: {fileID: 467946103}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Square (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -537,7 +537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ca32cc3e14820418dd06dd7b36b517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 1
+  strength: 2
   wallPoints: []
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -1163,7 +1163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952ef76725167f7438cbcbbeaee9ce47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeInTiles: {x: 4, y: 1}
+  sizeInTiles: {x: 4, y: 4}
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -1339,7 +1339,7 @@ GameObject:
   - component: {fileID: 1644874824}
   - component: {fileID: 1644874823}
   - component: {fileID: 1644874822}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Square (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1372,7 +1372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ca32cc3e14820418dd06dd7b36b517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 1
+  strength: 2
   wallPoints: []
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
