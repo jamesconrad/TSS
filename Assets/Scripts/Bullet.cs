@@ -72,6 +72,7 @@ public class Bullet : MonoBehaviour
             Debug.DrawRay(collision.GetContact(0).point, direction, Color.red, 10);
 
             float hpPercent = hitHealth.ChangeHP(-damage);
+
             hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
             hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
 

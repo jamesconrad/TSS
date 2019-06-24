@@ -44,6 +44,8 @@ public class Weapon : MonoBehaviour {
         {
             Fire(transform.up);
         }
+        if (Input.GetKeyDown(KeyCode.R))
+            gun.curammo = gun.maxammo;
 	}
 
     // Returns a new direction to jump to, then decline back from

@@ -9,15 +9,23 @@ public class BuildingParent : MonoBehaviour
     private float lastCalculation = 0;
     //Can only construct box shaped buildings
     public Vector2Int sizeInTiles = new Vector2Int(2,2);
+    //non-transformed bounds
     public Bounds bounds;
     private Vector2 tileSize;
     private Vector2[] tileCenters;
     private float[] tileStrengths;
     private RoofSupport[] children;
-    
+    public GameObject brokenRoofObject;
+    private Vector2[] rayDirections = { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
+
     // Start is called before the first frame update
     void Start()
     {
+        //rotate our strength check vectors to match building rotation
+        for (int i = 0; i < 4; i++)
+            rayDirections[i] = transform.rotation * rayDirections[i];
+
+
         //calcualte the bounds of all support children
         Vector2 averagePoint = new Vector2(0, 0);
         int supportWalls = 0;
@@ -49,6 +57,7 @@ public class BuildingParent : MonoBehaviour
             tc.x = tileHalfSize.x + (i % sizeInTiles.x) * tileSize.x;
             tc.y = tileHalfSize.y + (i / sizeInTiles.x) * tileSize.y;
             tileCenters[i] = (Vector2)bounds.min + tc;
+            tileCenters[i] = transform.rotation * tileCenters[i] + transform.localPosition;
             tileStrengths[i] = CalculatePointStrength(tileCenters[i]);
         }
         print(tileCenters);
@@ -58,27 +67,29 @@ public class BuildingParent : MonoBehaviour
     void Update()
     {
         lastCalculation += Time.deltaTime;
-
-
-        Vector2 tileHalfSize = tileSize / 2;
+        
+        //Vector2 tileHalfSize = tileSize / 2;
         foreach (Vector2 p in tileCenters)
         {
-            Debug.DrawLine(p + new Vector2(-tileHalfSize.x, -tileHalfSize.y), p + new Vector2(tileHalfSize.x, tileHalfSize.y), Color.green);
-            Debug.DrawLine(p + new Vector2(-tileHalfSize.x, tileHalfSize.y), p + new Vector2(tileHalfSize.x, -tileHalfSize.y), Color.green);
+            //Debug.DrawLine(p + new Vector2(-tileHalfSize.x, -tileHalfSize.y), p + new Vector2(tileHalfSize.x, tileHalfSize.y), Color.green);
+            //Debug.DrawLine(p + new Vector2(-tileHalfSize.x, tileHalfSize.y), p + new Vector2(tileHalfSize.x, -tileHalfSize.y), Color.green);
+            for (int i = 0; i < 4; i++)
+                Debug.DrawRay(p, rayDirections[i] * 0.25f, Color.green);
         }
     }
 
     float CalculatePointStrength(Vector2 point)
     {
-        Vector2[] directions = { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
         float strength = 0;
 
         for (int i = 0; i < 4; i++)
         {
-            RaycastHit2D hit = Physics2D.Raycast(point, directions[i], bounds.max.magnitude, ~LayerMask.NameToLayer("BuildingSupport"));
+            RaycastHit2D hit = Physics2D.Raycast(point, rayDirections[i], bounds.max.magnitude, ~LayerMask.NameToLayer("BuildingSupport"));
             if (hit.transform != null)
             {
                 float hitStrength = hit.transform.GetComponent<RoofSupport>().strength;
+                if (hitStrength == 0)
+                    continue;
                 strength += Mathf.Max(0, (hit.distance * hit.distance) / (-hitStrength * hitStrength) + 1);
             }
         }
@@ -93,7 +104,15 @@ public class BuildingParent : MonoBehaviour
             lastCalculation = 0;
             for (int i = 0; i < tileStrengths.Length; i++)
             {
-                tileStrengths[i] = CalculatePointStrength(tileCenters[i]);
+                if (tileStrengths[i] != 0)
+                {
+                    tileStrengths[i] = CalculatePointStrength(tileCenters[i]);
+                    if (tileStrengths[i] == 0)
+                    {
+                        GameObject tile = Instantiate(brokenRoofObject, tileCenters[i], transform.rotation, transform.parent);
+                        tile.transform.localScale = tileSize;
+                    }
+                }
             }
         }
     }
