@@ -38,14 +38,14 @@ class NavMeshPrefabInstanceEditor : Editor
 
     void OnInspectorGUIPrefab(GameObject go)
     {
-        var prefab = PrefabUtility.GetPrefabObject(go);
+        var prefab = PrefabUtility.GetPrefabInstanceHandle(go);
         var path = AssetDatabase.GetAssetPath(prefab);
 
         if (prefab && string.IsNullOrEmpty(path))
         {
             if (GUILayout.Button("Select the Prefab asset to bake or clear the navmesh", EditorStyles.helpBox))
             {
-                Selection.activeObject = PrefabUtility.GetPrefabParent(go);
+                Selection.activeObject = PrefabUtility.GetCorrespondingObjectFromSource(go);
                 EditorGUIUtility.PingObject(Selection.activeObject);
             }
         }
@@ -85,7 +85,7 @@ class NavMeshPrefabInstanceEditor : Editor
         {
             var instance = (NavMeshPrefabInstance)tgt;
             var go = instance.gameObject;
-            var prefab = PrefabUtility.GetPrefabObject(go);
+            var prefab = PrefabUtility.GetPrefabInstanceHandle(go);
             var path = AssetDatabase.GetAssetPath(prefab);
 
             if (string.IsNullOrEmpty(path))
@@ -105,7 +105,7 @@ class NavMeshPrefabInstanceEditor : Editor
         {
             var instance = (NavMeshPrefabInstance)tgt;
             var go = instance.gameObject;
-            var prefab = PrefabUtility.GetPrefabObject(go);
+            var prefab = PrefabUtility.GetPrefabInstanceHandle(go);
             var path = AssetDatabase.GetAssetPath(prefab);
 
             if (string.IsNullOrEmpty(path))
