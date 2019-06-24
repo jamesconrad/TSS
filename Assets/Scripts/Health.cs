@@ -6,6 +6,7 @@ public class Health : MonoBehaviour {
 
     public float maxHP = 100;
     public float curHP;
+    public float curPercent;
     public enum physicalMaterial { FLESH, INDESTRUCTABLE, WOOD, STONE, GLASS };
     public physicalMaterial physMat;
 
@@ -19,6 +20,6 @@ public class Health : MonoBehaviour {
     {
         float newHP = curHP + mod;
         curHP = newHP > maxHP ? maxHP : newHP < 0 ? 0 : newHP;
-        return curHP / maxHP;
+        return curPercent = curHP / maxHP;
     }
 }

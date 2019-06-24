@@ -50,6 +50,10 @@ public class Bullet : MonoBehaviour
             //Debug.DrawRay(collision.GetContact(0).point, normal, Color.red, 10);
             Debug.DrawRay(collision.GetContact(0).point, direction, Color.red, 10);
 
+            float hpPercent = hitHealth.ChangeHP(-damage);
+            hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
+            hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
+
             if (impactAngle > 45)
             {
                 direction = (rigidbody.velocity = Vector3.Reflect(vel, normal) * velocity).normalized;
@@ -60,8 +64,21 @@ public class Bullet : MonoBehaviour
                 damage /= (1 + distance) * 4;
                 if (damage < 1)
                     Destroy(gameObject);
-                
+
             }
+        }
+        else if (hitHealth.physMat == Health.physicalMaterial.WOOD)
+        {
+            Debug.DrawRay(collision.GetContact(0).point, direction, Color.red, 10);
+
+            float hpPercent = hitHealth.ChangeHP(-damage);
+            hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
+            hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
+
+            float distance = PenetrateObject(collision);
+            damage /= (1 + distance);
+            if (damage < 1)
+                Destroy(gameObject);
         }
     }
 

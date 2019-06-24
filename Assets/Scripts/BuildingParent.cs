@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BuildingParent : MonoBehaviour
 {
+    [Tooltip("Minimum time between calculations when being hit")]
+    public float recalculationInterval = 1;
+    private float lastCalculation = 0;
     //Can only construct box shaped buildings
     public Vector2Int sizeInTiles = new Vector2Int(2,2);
     public Bounds bounds;
@@ -54,6 +57,8 @@ public class BuildingParent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        lastCalculation += Time.deltaTime;
+
 
         Vector2 tileHalfSize = tileSize / 2;
         foreach (Vector2 p in tileCenters)
@@ -79,6 +84,18 @@ public class BuildingParent : MonoBehaviour
         }
 
         return Mathf.Max(0,strength);//children.Length;
+    }
+
+    public void OnStructureHit()
+    {
+        if (lastCalculation > recalculationInterval)
+        {
+            lastCalculation = 0;
+            for (int i = 0; i < tileStrengths.Length; i++)
+            {
+                tileStrengths[i] = CalculatePointStrength(tileCenters[i]);
+            }
+        }
     }
 
     void OnDrawGizmos()

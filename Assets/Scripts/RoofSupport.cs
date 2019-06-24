@@ -6,12 +6,14 @@ public class RoofSupport : MonoBehaviour {
 
     [Tooltip("When distance = strength, impact will be 0")]
     public float strength = 1;
+    private float baseStrength;
     //worldspace, 0 is max, 1 is min
     public Vector2[] wallPoints;
     public Bounds bounds;
 	// Use this for initialization
 	void Start ()
     {
+        baseStrength = strength;
         //fetch quad and build supports
         Collider2D collider = GetComponent<Collider2D>();
         bounds = collider.bounds;
@@ -25,4 +27,9 @@ public class RoofSupport : MonoBehaviour {
     {
         Debug.DrawLine(wallPoints[0], wallPoints[1], Color.red);
 	}
+
+    public void UpdateStrength(float healthPercent)
+    {
+        strength = baseStrength * healthPercent;
+    }
 }
