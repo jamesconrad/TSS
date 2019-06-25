@@ -57,11 +57,12 @@ public class Bullet : MonoBehaviour
             {
                 float distance = PenetrateObject(collision);
 
-                float hpPercent = hitHealth.ChangeHP(-damage);
-                hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
+                //float hpPercent = hitHealth.ChangeHP(-damage);
+                //hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
+                hitHealth.gameObject.GetComponent<RoofSupport>().OnBulletImpact(damage, direction);
                 hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
 
-                damage /= (1 + distance) * 4;
+                damage /= (1 + distance) * 8;
                 if (damage < 1)
                     Destroy(gameObject);
             }
@@ -70,11 +71,12 @@ public class Bullet : MonoBehaviour
         {
             float distance = PenetrateObject(collision);
 
-            float hpPercent = hitHealth.ChangeHP(-damage);
-            hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
+            //float hpPercent = hitHealth.ChangeHP(-damage);
+            //hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
+            hitHealth.gameObject.GetComponent<RoofSupport>().OnBulletImpact(damage, direction);
             hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
 
-            damage /= (1 + distance);
+            damage /= (1 + distance) * 2;
             if (damage < 1)
                 Destroy(gameObject);
         }

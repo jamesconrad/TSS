@@ -285,7 +285,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &184170838
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -642,7 +642,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &467946108
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1018,7 +1018,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &593977882
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1381,7 +1381,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &805408033
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1580,7 +1580,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &814728941
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3194,7 +3194,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &918539225
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3551,7 +3551,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &1082766015
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3908,7 +3908,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &1380522340
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4004,7 +4004,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1406841093}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.73, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 467946102}
@@ -4170,7 +4170,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &1635283497
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4369,7 +4369,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &1644874827
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4568,7 +4568,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &1693983523
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4767,7 +4767,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &1721187614
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5124,7 +5124,7 @@ MonoBehaviour:
   maxHP: 100
   curHP: 0
   curPercent: 0
-  physMat: 3
+  physMat: 2
 --- !u!212 &1908908102
 SpriteRenderer:
   m_ObjectHideFlags: 0
