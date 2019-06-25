@@ -99,7 +99,6 @@ public class Bullet : MonoBehaviour
         collision.collider.gameObject.layer = oldMask;
         Debug.DrawRay(hitInfo.point, direction, Color.yellow, 10);
         DrawArrow(collision.GetContact(0).point + approxMaxDiameter * direction, -direction * approxMaxDiameter, 10, Color.cyan);
-        print(hitInfo.collider.name);
         return hitInfo.point;
     }
 

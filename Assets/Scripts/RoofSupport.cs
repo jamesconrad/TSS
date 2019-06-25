@@ -32,6 +32,13 @@ public class RoofSupport : MonoBehaviour {
     {
         strength = baseStrength * healthPercent;
         if (strength == 0)
-            gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+        {
+            Destroy(GetComponent<SpriteRenderer>());
+            Destroy(GetComponent<NavMeshStaticFeature>());
+            Destroy(GetComponent<Collider2D>());
+            RubbleSpawner rs = GetComponent<RubbleSpawner>();
+            rs.GenerateRubble();
+            //gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+        }
     }
 }

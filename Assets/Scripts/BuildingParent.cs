@@ -111,6 +111,9 @@ public class BuildingParent : MonoBehaviour
                     {
                         GameObject tile = Instantiate(brokenRoofObject, tileCenters[i], transform.rotation, transform.parent);
                         tile.transform.localScale = tileSize;
+                        RubbleSpawner rs = tile.GetComponent<RubbleSpawner>();
+                        rs.rubbleType = RubbleSpawner.RubbleType.ROOF;
+                        rs.GenerateRubble();
                     }
                 }
             }
