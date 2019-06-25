@@ -23,6 +23,7 @@ public class Bullet : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        print(collision.collider.name);
         Health hitHealth = collision.gameObject.GetComponent<Health>();
         if (hitHealth == null)
             return;
@@ -47,12 +48,6 @@ public class Bullet : MonoBehaviour
             Vector3 normal = collision.GetContact(0).normal;
             Vector3 vel = direction;
             float impactAngle = Vector3.Angle(vel, -normal);
-            //Debug.DrawRay(collision.GetContact(0).point, normal, Color.red, 10);
-            Debug.DrawRay(collision.GetContact(0).point, direction, Color.red, 10);
-
-            float hpPercent = hitHealth.ChangeHP(-damage);
-            hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
-            hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
 
             if (impactAngle > 45)
             {
@@ -61,22 +56,24 @@ public class Bullet : MonoBehaviour
             else
             {
                 float distance = PenetrateObject(collision);
+
+                float hpPercent = hitHealth.ChangeHP(-damage);
+                hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
+                hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
+
                 damage /= (1 + distance) * 4;
                 if (damage < 1)
                     Destroy(gameObject);
-
             }
         }
         else if (hitHealth.physMat == Health.physicalMaterial.WOOD)
         {
-            Debug.DrawRay(collision.GetContact(0).point, direction, Color.red, 10);
+            float distance = PenetrateObject(collision);
 
             float hpPercent = hitHealth.ChangeHP(-damage);
-
             hitHealth.gameObject.GetComponent<RoofSupport>().UpdateStrength(hpPercent);
             hitHealth.gameObject.GetComponentInParent<BuildingParent>().OnStructureHit();
 
-            float distance = PenetrateObject(collision);
             damage /= (1 + distance);
             if (damage < 1)
                 Destroy(gameObject);
@@ -94,11 +91,12 @@ public class Bullet : MonoBehaviour
         //float approxMaxDiameter = (hitBounds.max - hitBounds.min).magnitude;
         float approxMaxDiameter = (hitBounds.extents * 2 * direction).magnitude * 2;
         LayerMask oldMask = collision.collider.gameObject.layer;
-        collision.collider.gameObject.layer = LayerMask.NameToLayer("TEMP_RAYCAST");
-        RaycastHit2D hitInfo = Physics2D.Raycast(collision.GetContact(0).point + approxMaxDiameter * direction, -direction, approxMaxDiameter, ~LayerMask.NameToLayer("TEMP_RAYCAST"));
+        //collision.collider.gameObject.layer = LayerMask.NameToLayer("TEMP_RAYCAST");
+        RaycastHit2D hitInfo = Physics2D.Raycast(collision.GetContact(0).point + approxMaxDiameter * direction, -direction, approxMaxDiameter, ~collision.collider.gameObject.layer);
         collision.collider.gameObject.layer = oldMask;
-        Debug.DrawRay(hitInfo.point, direction, Color.yellow, 10);
-        DrawArrow(collision.GetContact(0).point + approxMaxDiameter * direction, -direction * approxMaxDiameter, 10, Color.cyan);
+        //Debug.DrawRay(hitInfo.point, direction, Color.yellow, 10);
+        //DrawArrow(collision.GetContact(0).point + approxMaxDiameter * direction, -direction * approxMaxDiameter, 10, Color.cyan);
+        DrawArrow(collision.GetContact(0).point + approxMaxDiameter * direction, -direction * hitInfo.distance, 10, Color.cyan);
         return hitInfo.point;
     }
 
@@ -106,11 +104,13 @@ public class Bullet : MonoBehaviour
     {
         Vector3 oppositePoint = OppositeImpactPoint(collision);
         Vector3 originalPoint = transform.position;
-        transform.position = oppositePoint;
+        float distance = (oppositePoint - originalPoint).magnitude;
+        //add 2% of the penetration distance to prevent colliding with it on the other side
+        transform.position = oppositePoint + (Vector3)(direction * (0.06f * distance));
 
         Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
         rigidbody.velocity = direction * velocity;
-        return (oppositePoint - originalPoint).magnitude;
+        return distance;
     }
 
     void DrawArrow(Vector3 pos, Vector3 direction, float duration, Color color, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)

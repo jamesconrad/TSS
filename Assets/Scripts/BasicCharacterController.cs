@@ -6,7 +6,7 @@ public class BasicCharacterController : MonoBehaviour {
 
     public float moveForce = 1;
     public float rotationSpeed = 1;
-
+    public float cameraOffset = 2;
 
     private Rigidbody2D rb2d;
 
@@ -54,6 +54,8 @@ public class BasicCharacterController : MonoBehaviour {
         }
 
         rb2d.AddForce(moveVector * adjustedMoveForce, ForceMode2D.Impulse);
-
+        Vector3 cameraPos = transform.position + transform.up * cameraOffset;
+        cameraPos.z = -10;
+        Camera.main.transform.position = cameraPos;
     }
 }
