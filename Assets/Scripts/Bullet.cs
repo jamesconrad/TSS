@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
     public Weapon.WeaponStats.AmmoType ammo;
     public Vector2 direction;
     public float velocity;
+    public float liveTime = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,13 +18,15 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        liveTime -= Time.deltaTime;
+        if (liveTime < 0)
+            Destroy(gameObject);
     }
 
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        print(collision.collider.name);
+        //print(collision.collider.name);
         Health hitHealth = collision.gameObject.GetComponent<Health>();
         if (hitHealth == null)
             return;
