@@ -58,6 +58,7 @@ public class RoofSupport : MonoBehaviour {
             Destroy(GetComponent<Collider2D>());
             RubbleSpawner rs = GetComponent<RubbleSpawner>();
             rs.GenerateRubble();
+            GenerateNavMesh2D.Instance.RebuildNavMesh();
             //gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }

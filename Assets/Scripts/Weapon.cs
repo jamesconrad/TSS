@@ -19,7 +19,7 @@ public class Weapon : MonoBehaviour {
 
         public float maxammo;
         public float curammo;
-        public enum AmmoType {STANDARD, ARMORPIERCING, EXPLOSIVE};
+        public enum AmmoType {STANDARD, ARMORPIERCING, EXPLOSIVE, NONE};
         public AmmoType ammotype;
         public float reloadtime;
         public float ammoleft;
@@ -51,7 +51,7 @@ public class Weapon : MonoBehaviour {
     // Returns a new direction to jump to, then decline back from
     public Vector2 Fire(Vector2 direction)
     {
-        if (gun.curammo <= 0)
+        if (gun.ammotype != WeaponStats.AmmoType.NONE && gun.curammo <= 0)
         {
             Reload();
             return direction;
@@ -85,7 +85,7 @@ public class Weapon : MonoBehaviour {
     
     public bool Reload()
     {
-        if (gun.ammoleft <= 0)
+        if (gun.ammotype != WeaponStats.AmmoType.NONE && gun.ammoleft <= 0)
             return false;
 
         // Dispatch reload animation, call this after completion

@@ -6,7 +6,7 @@ using System.Linq;
 
 // Build and update a localized navmesh from the sources marked by NavMeshSourceTag
 [DefaultExecutionOrder(-102)]
-public class GenerateNavMesh2D : MonoBehaviour
+public class GenerateNavMesh2D : Singleton<GenerateNavMesh2D>
 {
     public Vector2 PlaneDimensions = new Vector2(100f, 100f);
 
