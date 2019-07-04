@@ -12,7 +12,7 @@ public class Weapon : MonoBehaviour {
         public float recoil;
         [Tooltip("Direction rotated by rand(-acc,acc)")]
         public float accuracy;
-        [Tooltip("Rounds per second")]
+        [Tooltip("Seconds between rounds")]
         public float firerate;
 
         public float muzzleVelocity;
@@ -21,6 +21,8 @@ public class Weapon : MonoBehaviour {
         public float curammo;
         public enum AmmoType {STANDARD, ARMORPIERCING, EXPLOSIVE, NONE};
         public AmmoType ammotype;
+        public enum TriggerType { AUTO, SEMI};
+        public TriggerType triggertype;
         public float reloadtime;
         public float ammoleft;
 
@@ -28,21 +30,40 @@ public class Weapon : MonoBehaviour {
         public float ammopershot;
         public float bulletspershot;
 
-        public Transform barrelExit;
+        public Sprite sprite;
+
+        public Vector3 barrelExit;
+        public Vector3 leftHand;
+        public Vector3 rightHand;
     };
 
     public WeaponStats gun;
     public GameObject STDBullet;
+    public bool saveToFile = false;
+    private float firedelay = 0;
 	// Use this for initialization
 	void Start () {
-		
+        //force fetch from json
+        gun = WeaponLoader.Instance.Load(0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	    if (Input.GetMouseButtonDown(0))
+        firedelay -= Time.deltaTime;
+        if (saveToFile == true)
         {
-            Fire(transform.up);
+            print(JsonUtility.ToJson(gun));
+            saveToFile = false;
+        }
+	    if (gun.triggertype == WeaponStats.TriggerType.SEMI && Input.GetMouseButtonDown(0))
+        {
+            if (firedelay <= 0)
+                Fire(transform.up);
+        }
+        else if (gun.triggertype == WeaponStats.TriggerType.AUTO && Input.GetMouseButton(0))
+        {
+            if (firedelay <= 0)
+                Fire(transform.up);
         }
         if (Input.GetKeyDown(KeyCode.R))
             gun.curammo = gun.maxammo;
@@ -62,7 +83,7 @@ public class Weapon : MonoBehaviour {
 
         //spawn bullet
         GameObject bullet = Instantiate(STDBullet);
-        bullet.transform.position = gun.barrelExit.position;
+        bullet.transform.position = transform.position + transform.rotation*gun.barrelExit;
         bullet.transform.rotation = Quaternion.LookRotation(new Vector3(bulletDir.x, bulletDir.y, 0));
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         bulletScript.damage = gun.damage;
@@ -75,6 +96,7 @@ public class Weapon : MonoBehaviour {
 
         //calculate and return recoil shit
         float spreadMod = Random.Range(-gun.recoil, gun.recoil);
+        firedelay = gun.firerate;
         return Quaternion.Euler(new Vector3(0,0,spreadMod)) * direction;
     }
 
@@ -94,5 +116,13 @@ public class Weapon : MonoBehaviour {
         gun.curammo = reloaded;
         gun.ammoleft -= reloaded;
         return true;
+    }
+
+    public WeaponStats EquipWeapon(WeaponStats newWeapon, ref WeaponStats oldWeapon)
+    {
+        WeaponStats old = oldWeapon = gun;
+        gun = newWeapon;
+        transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = newWeapon.sprite;
+        return old;
     }
 }

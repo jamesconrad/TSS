@@ -13,6 +13,7 @@ public class RoofSupport : MonoBehaviour {
     private Vector3 basePosition;
     private float interpolateVal;
     private Health health;
+    private static bool navMeshRebuildQueued = false;
 	// Use this for initialization
 	void Start ()
     {
@@ -56,10 +57,19 @@ public class RoofSupport : MonoBehaviour {
             Destroy(GetComponent<SpriteRenderer>());
             Destroy(GetComponent<NavMeshStaticFeature>());
             Destroy(GetComponent<Collider2D>());
+            StartCoroutine(DelayedNavMeshRebuild());
             RubbleSpawner rs = GetComponent<RubbleSpawner>();
             rs.GenerateRubble();
-            GenerateNavMesh2D.Instance.RebuildNavMesh();
             //gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
+    }
+
+    private IEnumerator DelayedNavMeshRebuild(float delay = 1)
+    {
+        if (navMeshRebuildQueued) yield break;
+        navMeshRebuildQueued = true;
+        yield return new WaitForSeconds(delay);
+        GenerateNavMesh2D.Instance.RebuildNavMesh();
+        navMeshRebuildQueued = false;
     }
 }
