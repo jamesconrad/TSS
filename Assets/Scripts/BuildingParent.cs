@@ -60,7 +60,6 @@ public class BuildingParent : MonoBehaviour
             tileCenters[i] = transform.rotation * tileCenters[i] + transform.localPosition;
             tileStrengths[i] = CalculatePointStrength(tileCenters[i]);
         }
-        print(tileCenters);
     }
 
     // Update is called once per frame
@@ -97,9 +96,9 @@ public class BuildingParent : MonoBehaviour
         return Mathf.Max(0,strength);//children.Length;
     }
 
-    public void OnStructureHit()
+    public void OnStructureHit(bool forced = false)
     {
-        if (lastCalculation > recalculationInterval)
+        if (lastCalculation > recalculationInterval || forced)
         {
             lastCalculation = 0;
             for (int i = 0; i < tileStrengths.Length; i++)
