@@ -6,12 +6,15 @@ public class DroppedWeapon : MonoBehaviour
 {
     private float t;
     private int id;
-
+    [Tooltip("If -1 then will not override, else will.")]
+    public int dropIdOverride = -1;
     // Start is called before the first frame update
     void Start()
     {
-        id = Random.Range(0, WeaponLoader.Instance.NumLoadedGuns());
-        id = 1;
+        if (dropIdOverride == -1)
+            id = Random.Range(0, WeaponLoader.Instance.NumLoadedGuns());
+        else
+            id = dropIdOverride;
         GetComponent<SpriteRenderer>().sprite = WeaponLoader.Instance.Load(id).sprite;
     }
 

@@ -17,6 +17,8 @@ public class UIController : Singleton<UIController>
     public Image[] weaponBoxes;
     public Text ammoText;
 
+    private float clickTime;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,13 +53,17 @@ public class UIController : Singleton<UIController>
                 print("Box " + i + " has weapon " + weapons[i].name);
                 continue;
             }
-            weapons[i] = ws;
-            weaponBoxes[i].sprite = ws.sprite;
-            weaponBoxes[i].gameObject.SetActive(true);
-            print("Equiped " + ws.name + " to slot " + i + ".");
+            AddWeaponToBox(ws, i);
             return true;
         }
         return false;
+    }
+
+    private void AddWeaponToBox(Weapon.WeaponStats ws, int boxId)
+    {
+        weapons[boxId] = ws;
+        weaponBoxes[boxId].sprite = ws.sprite;
+        weaponBoxes[boxId].gameObject.SetActive(true);
     }
 
     public void EquipWeapon(int slotId)

@@ -17,14 +17,15 @@ public class Weapon : MonoBehaviour {
 
         public float muzzleVelocity;
 
-        public float maxammo;
-        public float curammo;
+        public float maxammo; //max ammo player can have for this gun
+        public float curammo; //current ammo in magazine
+        public float magazinesize; //max ammo in magazine
         public enum AmmoType {STANDARD, ARMORPIERCING, EXPLOSIVE, NONE};
         public AmmoType ammotype;
         public enum TriggerType { AUTO, SEMI};
         public TriggerType triggertype;
         public float reloadtime;
-        public float ammoleft;
+        public float ammoleft; //remaining total ammo
 
         // mainly for shotguns
         public float ammopershot;
@@ -49,24 +50,21 @@ public class Weapon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        firedelay -= Time.deltaTime;
+        if (firedelay > 0)
+            firedelay -= Time.deltaTime;
         if (saveToFile == true)
         {
             print(JsonUtility.ToJson(gun));
             saveToFile = false;
         }
 	    if (gun.triggertype == WeaponStats.TriggerType.SEMI && Input.GetMouseButtonDown(0))
-        {
-            if (firedelay <= 0)
-                Fire(transform.up);
-        }
+            Fire(transform.right);
         else if (gun.triggertype == WeaponStats.TriggerType.AUTO && Input.GetMouseButton(0))
-        {
-            if (firedelay <= 0)
-                Fire(transform.up);
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-            gun.curammo = gun.maxammo;
+            Fire(transform.right);
+        if (Input.GetKey(KeyCode.R))
+            Reload();
+        if (Input.GetKeyDown(KeyCode.P))
+            gun.ammoleft = gun.maxammo;
 	}
 
     // Returns a new direction to jump to, then decline back from
@@ -77,13 +75,15 @@ public class Weapon : MonoBehaviour {
             Reload();
             return direction;
         }
+        if (firedelay > 0)
+            return direction;
         //calcualte accuracy shift
         float accMod = Random.Range(-gun.accuracy, gun.accuracy);
         Vector2 bulletDir = Quaternion.Euler(new Vector3(0, 0, accMod)) * direction;
 
         //spawn bullet
         GameObject bullet = Instantiate(STDBullet);
-        bullet.transform.position = transform.position + transform.rotation*gun.barrelExit;
+        bullet.transform.position = transform.position + transform.rotation*Quaternion.Euler(0,0,-90)*gun.barrelExit;
         bullet.transform.rotation = Quaternion.LookRotation(new Vector3(bulletDir.x, bulletDir.y, 0));
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         bulletScript.damage = gun.damage;
@@ -113,6 +113,7 @@ public class Weapon : MonoBehaviour {
         // Dispatch reload animation, call this after completion
         float reloadcost = gun.maxammo - gun.curammo;
         float reloaded = gun.ammoleft > reloadcost ? reloadcost : gun.ammoleft;
+        reloaded = reloaded > gun.magazinesize ? gun.magazinesize : reloaded;
         gun.curammo = reloaded;
         gun.ammoleft -= reloaded;
         return true;
@@ -122,7 +123,7 @@ public class Weapon : MonoBehaviour {
     {
         WeaponStats old = oldWeapon = gun;
         gun = newWeapon;
-        transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = newWeapon.sprite;
+        GetComponent<SpriteRenderer>().sprite = newWeapon.sprite;
         return old;
     }
 }

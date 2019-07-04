@@ -46,6 +46,13 @@ public class NavAgent : MonoBehaviour
             CalculatePath();
             repathTime = Time.time + RepathDelaySeconds;
         }
+        if (PathPoints.Count > 0)
+        {
+            for (int i = 1; i < PathPoints.Count; i++)
+                Debug.DrawLine(PathPoints[i - 1], PathPoints[i], Color.gray);
+            Debug.DrawLine(transform.position, PathPoints[0]);
+        }
+
     }
 
     private void FixedUpdate()
@@ -76,7 +83,7 @@ public class NavAgent : MonoBehaviour
             float MoveForce = Mathf.Clamp01((0.5f * Mathf.Cos(angleOffset/30) + 0.5f) * MaxMoveForce);
             Vector2 moveForceVector = vectorToNextPointNormalised * MoveForce;
             //print("MoveForce: " + MoveForce);
-            Debug.DrawRay(transform.position, moveForceVector, Color.yellow);
+            //Debug.DrawRay(transform.position, moveForceVector, Color.yellow);
             rb2d.AddForce(moveForceVector, ForceMode2D.Force);
         }
     }
