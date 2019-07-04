@@ -111,10 +111,9 @@ public class Weapon : MonoBehaviour {
             return false;
 
         // Dispatch reload animation, call this after completion
-        float reloadcost = gun.maxammo - gun.curammo;
+        float reloadcost = gun.magazinesize - gun.curammo;
         float reloaded = gun.ammoleft > reloadcost ? reloadcost : gun.ammoleft;
-        reloaded = reloaded > gun.magazinesize ? gun.magazinesize : reloaded;
-        gun.curammo = reloaded;
+        gun.curammo += reloaded;
         gun.ammoleft -= reloaded;
         return true;
     }
