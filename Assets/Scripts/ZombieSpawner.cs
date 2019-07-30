@@ -15,7 +15,8 @@ public class ZombieSpawner : MonoBehaviour
 
     private bool AttemptSpawn(Vector2 pos)
     {
-        Instantiate(zombieRefs[Random.Range(0,zombieRefs.Length)], pos, Quaternion.identity);
+        GameObject newZombie = Instantiate(zombieRefs[Random.Range(0,zombieRefs.Length)], transform);
+        newZombie.transform.position = pos;
         return true;
     }
 }

@@ -18,6 +18,7 @@ public class Zombie : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         navAgent = GetComponent<NavAgent>();
         hp = GetComponent<Health>();
+        target = GameObject.FindWithTag("Player");
         if (navAgent == null)
             Destroy(gameObject);
     }

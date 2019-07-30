@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 8580591620250088182}
   m_Layer: 0
   m_Name: STDBullet
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -231,4 +231,4 @@ MonoBehaviour:
   ammo: 0
   direction: {x: 0, y: 0}
   velocity: 0
-  penetrationOffset: 0.06
+  liveTime: 10

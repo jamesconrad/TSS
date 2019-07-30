@@ -25,12 +25,11 @@ public class PlayerAI : MonoBehaviour
     Transform target;
     public Transform zombieParent;
     float targetDuration;
-    const float forceRetargetTime = 5;
+    const float forceRetargetTime = 1;
     Weapon weapon;
     NavAgent navAgent;
     Rigidbody2D rb2d;
 
-    Triple<float, float, bool>[] scoreParameters;// = new Triple<float, float, bool>[zombieParent.transform.childCount];
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +37,6 @@ public class PlayerAI : MonoBehaviour
         rb2d = transform.GetComponentInChildren<Rigidbody2D>();
         weapon = transform.GetComponentInChildren<Weapon>();
         navAgent = transform.GetComponentInChildren<NavAgent>();
-        scoreParameters = new Triple<float, float, bool>[zombieParent.transform.childCount];
         ReTarget();
     }
 
@@ -51,9 +49,13 @@ public class PlayerAI : MonoBehaviour
 
         Vector2 direction = (target.position - transform.position).normalized;
         Vector2 moveVector = new Vector2(0, 0);
-        if ((target.position - transform.position).magnitude < 5)
+        if ((target.position - transform.position).magnitude < 2.5)
         {
             moveVector = (-direction);
+        }
+        else if ((target.position - transform.position).magnitude > 5)
+        {
+            moveVector = direction;
         }
 
         float lookAngleOffset = Vector2.SignedAngle(direction, (Vector2)transform.up);
@@ -70,16 +72,15 @@ public class PlayerAI : MonoBehaviour
         }
         else//moving forward or sideways
         {
-            adjustedMoveForce = Mathf.Clamp01((0.5f * Mathf.Cos(moveAngleOffset / 60) + 0.5f) * 1);
+            adjustedMoveForce = Mathf.Clamp01((0.5f * Mathf.Cos(moveAngleOffset / 60) + 0.5f) * 0.25f);
         }
 
         rb2d.AddForce(moveVector * adjustedMoveForce, ForceMode2D.Impulse);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, (target.position - transform.position), 100, ~LayerMask.GetMask("Player"));
+        RaycastHit2D hit = Physics2D.Raycast(weapon.transform.position, (target.position - weapon.transform.position), 100, ~LayerMask.GetMask("Player"));
         
-        if (hit.transform != null)
+        if (hit.transform != null && (target.position - transform.position).magnitude < 10)
         {
-            print(hit.transform.name);
             Health hitHealth = hit.transform.gameObject.GetComponent<Health>();
             if (hitHealth != null)
             {
@@ -94,7 +95,7 @@ public class PlayerAI : MonoBehaviour
     void ReTarget()
     {
         //score, distance, visible
-        //Triple<float, float, bool>[] scoreParameters = new Triple<float, float, bool>[zombieParent.transform.childCount];
+        Triple<float, float, bool>[] scoreParameters = new Triple<float, float, bool>[zombieParent.transform.childCount];
         for (int i = 0; i < zombieParent.transform.childCount; i++)
         {
             Transform selection = zombieParent.GetChild(i);
@@ -112,16 +113,8 @@ public class PlayerAI : MonoBehaviour
             if (scoreParameters[i].First < scoreParameters[best].First)
                 best = i;
         }
+
         target = zombieParent.transform.GetChild(best);
         targetDuration = 0;
-    }
-
-    private void OnGUI()
-    {
-        for (int i = 0; i < zombieParent.transform.childCount; i++)
-        {
-            Transform selection = zombieParent.GetChild(i);
-            UnityEditor.Handles.Label(selection.position, scoreParameters[i].First.ToString());
-        }
     }
 }
