@@ -10,12 +10,14 @@ public class Zombie : MonoBehaviour
     //swarmai
     private NavAgent navAgent;
     private Rigidbody2D rb2d;
+    private Health hp;
 
     // Start is called before the first frame update
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
         navAgent = GetComponent<NavAgent>();
+        hp = GetComponent<Health>();
         if (navAgent == null)
             Destroy(gameObject);
     }
@@ -28,6 +30,8 @@ public class Zombie : MonoBehaviour
         {
             //Debug.DrawLine(transform.position, target.transform.position,Color.red);
         }
+        if (hp.curHP <= 0)
+            Destroy(gameObject);
         navAgent.SetDestination(target.transform.position);
     }
 }

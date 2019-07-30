@@ -23,19 +23,22 @@ public class Triple<T, U, V>
 public class PlayerAI : MonoBehaviour
 {
     Transform target;
-    Transform zombieParent;
+    public Transform zombieParent;
     float targetDuration;
     const float forceRetargetTime = 5;
     Weapon weapon;
     NavAgent navAgent;
     Rigidbody2D rb2d;
+
+    Triple<float, float, bool>[] scoreParameters;// = new Triple<float, float, bool>[zombieParent.transform.childCount];
     // Start is called before the first frame update
     void Start()
     {
-        zombieParent = transform.parent;
+        //zombieParent = transform.parent;
         rb2d = transform.GetComponentInChildren<Rigidbody2D>();
         weapon = transform.GetComponentInChildren<Weapon>();
         navAgent = transform.GetComponentInChildren<NavAgent>();
+        scoreParameters = new Triple<float, float, bool>[zombieParent.transform.childCount];
         ReTarget();
     }
 
@@ -72,32 +75,53 @@ public class PlayerAI : MonoBehaviour
 
         rb2d.AddForce(moveVector * adjustedMoveForce, ForceMode2D.Impulse);
 
-        if (lookAngleOffset < 15)
-            weapon.Fire(transform.up);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, (target.position - transform.position), 100, ~LayerMask.GetMask("Player"));
+        
+        if (hit.transform != null)
+        {
+            print(hit.transform.name);
+            Health hitHealth = hit.transform.gameObject.GetComponent<Health>();
+            if (hitHealth != null)
+            {
+                if (Mathf.Abs(lookAngleOffset) < 5 && (hitHealth.physMat != Health.physicalMaterial.INDESTRUCTABLE || hitHealth.physMat != Health.physicalMaterial.STONE))
+                    weapon.Fire(transform.up);
+            }
+        }
+        
+        Debug.DrawLine(transform.position, target.position, Color.red);
     }
 
     void ReTarget()
     {
         //score, distance, visible
-        Triple<float, float, bool>[] scoreParameters = new Triple<float, float, bool>[zombieParent.transform.childCount];
+        //Triple<float, float, bool>[] scoreParameters = new Triple<float, float, bool>[zombieParent.transform.childCount];
         for (int i = 0; i < zombieParent.transform.childCount; i++)
         {
             Transform selection = zombieParent.GetChild(i);
+            scoreParameters[i] = new Triple<float, float, bool>();
             scoreParameters[i].Second = (transform.position - selection.position).magnitude;
-            RaycastHit hit;
-            Physics.Raycast(transform.position, (selection.position - transform.position), out hit, 100);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, (selection.position - transform.position), 100, ~LayerMask.GetMask("Player"));
             scoreParameters[i].Third = hit.transform == selection;
             //score = distance + 5 if visible, 0 if not
-            scoreParameters[i].First = scoreParameters[i].Second + (scoreParameters[i].Third == true ? 5 : 0);
+            scoreParameters[i].First = scoreParameters[i].Second + (scoreParameters[i].Third == true ? 0 : 10);
         }
 
         int best = 0;
         for (int i = 1; i < scoreParameters.Length; i++)
         {
-            if (scoreParameters[i].First > scoreParameters[best].First)
+            if (scoreParameters[i].First < scoreParameters[best].First)
                 best = i;
         }
         target = zombieParent.transform.GetChild(best);
         targetDuration = 0;
+    }
+
+    private void OnGUI()
+    {
+        for (int i = 0; i < zombieParent.transform.childCount; i++)
+        {
+            Transform selection = zombieParent.GetChild(i);
+            UnityEditor.Handles.Label(selection.position, scoreParameters[i].First.ToString());
+        }
     }
 }

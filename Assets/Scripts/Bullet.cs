@@ -96,8 +96,8 @@ public class Bullet : MonoBehaviour
         //float approxMaxDiameter = (hitBounds.max - hitBounds.min).magnitude;
         float approxMaxDiameter = (hitBounds.extents * 2 * direction).magnitude * 2;
         LayerMask oldMask = collision.collider.gameObject.layer;
-        //collision.collider.gameObject.layer = LayerMask.NameToLayer("TEMP_RAYCAST");
-        RaycastHit2D hitInfo = Physics2D.Raycast(collision.GetContact(0).point + approxMaxDiameter * direction, -direction, approxMaxDiameter, ~collision.collider.gameObject.layer);
+        collision.collider.gameObject.layer = LayerMask.NameToLayer("TEMP_RAYCAST");
+        RaycastHit2D hitInfo = Physics2D.Raycast(collision.GetContact(0).point + approxMaxDiameter * direction, -direction, approxMaxDiameter, ~LayerMask.GetMask("TEMP_RAYCAST"));
         collision.collider.gameObject.layer = oldMask;
         //Debug.DrawRay(hitInfo.point, direction, Color.yellow, 10);
         //DrawArrow(collision.GetContact(0).point + approxMaxDiameter * direction, -direction * approxMaxDiameter, 10, Color.cyan);

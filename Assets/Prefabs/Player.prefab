@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1297862652799814105}
   - component: {fileID: 1665708984221061045}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 5166152188239269951}
   - component: {fileID: 2691150681419106269}
   - component: {fileID: 3847103727216589498}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -196,6 +196,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gun
       objectReference: {fileID: 0}
+    - target: {fileID: 2773566476828395915, guid: f6a2315572d565c4599d558e84ec41fa,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8478271089919900029, guid: f6a2315572d565c4599d558e84ec41fa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -249,6 +254,11 @@ PrefabInstance:
     - target: {fileID: 8478271089919900029, guid: f6a2315572d565c4599d558e84ec41fa,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616156023899204645, guid: f6a2315572d565c4599d558e84ec41fa,
+        type: 3}
+      propertyPath: gun.curammo
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

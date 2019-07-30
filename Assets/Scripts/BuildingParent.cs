@@ -83,7 +83,7 @@ public class BuildingParent : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
-            RaycastHit2D hit = Physics2D.Raycast(point, rayDirections[i], bounds.max.magnitude, ~LayerMask.NameToLayer("BuildingSupport"));
+            RaycastHit2D hit = Physics2D.Raycast(point, rayDirections[i], bounds.max.magnitude, ~LayerMask.GetMask("BuildingSupport"));
             if (hit.transform != null)
             {
                 float hitStrength = hit.transform.GetComponent<RoofSupport>().strength;
