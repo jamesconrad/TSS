@@ -35,18 +35,17 @@ public class MenuAutoPlayHandler : MonoBehaviour
             ResetWorld();
 
         //camera movement
-        Vector2 playerPos = playerAI.transform.position;
-        Vector2 cameraPos = Camera.main.transform.position;
-        //float offset = (playerPos - cameraPos).magnitude;
-        //if (offset > Camera.main.rect.width)
-        Camera.main.transform.position = (Vector3)playerPos + Vector3.Lerp(cameraStart, cameraEnd, demoTime / demoDuration) + new Vector3(0,0,-10);
+        Camera.main.transform.position = (Vector3)playerAI.transform.position + Vector3.Lerp(cameraStart, cameraEnd, demoTime / demoDuration) + new Vector3(0,0,-10);
 
 
     }
 
     void ResetWorld()
     {
+        //reset timer
         demoTime = 0;
+
+        //setup camera movement
         Vector2 playerPos = Random.insideUnitCircle * 10;
         playerAI.transform.position = playerPos;
         cameraStart = Random.insideUnitCircle * 6;
@@ -55,6 +54,8 @@ public class MenuAutoPlayHandler : MonoBehaviour
         cameraDir = (Quaternion.Euler(0, 0, Random.Range(-15, 15)) * camToPlayer).normalized;
         cameraEnd = cameraStart + cameraDir * camToPlayer.magnitude;
         Debug.DrawLine(cameraStart + playerPos, cameraEnd + playerPos, Color.cyan, 5);
+
+        //cleanup things from last demo
         for (int i = 0; i < zombieContainer.childCount; i++)
             Destroy(zombieContainer.GetChild(i).gameObject);
         zombieSpawner.SpawnZombies(Random.insideUnitCircle * 10, 10);
@@ -62,5 +63,7 @@ public class MenuAutoPlayHandler : MonoBehaviour
         {
             Destroy(go);
         }
+        //refill ammo
+        print("Refilled " + UIController.Instance.AddAmmo(-1) + " ammo");
     }
 }

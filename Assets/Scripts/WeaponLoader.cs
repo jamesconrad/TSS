@@ -9,11 +9,13 @@ public class WeaponLoader : Singleton<WeaponLoader>
 
     public void Start()
     {
+        Sprite[] weaponSprites = Resources.LoadAll<Sprite>("weapons");
         cached = new Weapon.WeaponStats[weaponJsons.Length];
         for (int i = 0; i < weaponJsons.Length; i++)
+        {
             cached[i] = JsonUtility.FromJson<Weapon.WeaponStats>(weaponJsons[i].text);
-
-
+            cached[i].sprite = weaponSprites[i];
+        }
     }
 
     public Weapon.WeaponStats Load(int gunId)

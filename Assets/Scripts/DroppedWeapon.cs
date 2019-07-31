@@ -32,7 +32,7 @@ public class DroppedWeapon : MonoBehaviour
         if (collision.tag == "Player")
         {
             print(WeaponLoader.Instance.Load(id).name);
-            if (UIController.Instance.AddWeapon(WeaponLoader.Instance.Load(id)))
+            if (UIController.Instance.AddWeapon(WeaponLoader.Instance.Load(id)) != -1)
                 Destroy(gameObject);
         }
     }

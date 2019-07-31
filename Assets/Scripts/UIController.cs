@@ -44,7 +44,7 @@ public class UIController : Singleton<UIController>
 
     }
 
-    public bool AddWeapon(Weapon.WeaponStats ws)
+    public int AddWeapon(Weapon.WeaponStats ws)
     {
         for (int i = 0; i < weapons.Length; i++)
         {
@@ -54,24 +54,70 @@ public class UIController : Singleton<UIController>
                 continue;
             }
             AddWeaponToBox(ws, i);
-            return true;
+            return i;
         }
-        return false;
+        return -1;
     }
 
-    private void AddWeaponToBox(Weapon.WeaponStats ws, int boxId)
+    private void AddWeaponToBox(Weapon.WeaponStats ws, int slotId)
     {
-        weapons[boxId] = ws;
-        weaponBoxes[boxId].sprite = ws.sprite;
-        weaponBoxes[boxId].gameObject.SetActive(true);
+        weapons[slotId] = ws;
+        weaponBoxes[slotId].sprite = ws.sprite;
+        weaponBoxes[slotId].gameObject.SetActive(true);
+    }
+
+    public void RemoveWeapon(int slotId)
+    {
+        for (int i = 0; i < weaponBoxes.Length; i++)
+        {
+            if (weaponBoxes[i].gameObject.activeSelf && i != slotId)
+            {
+                weaponBoxes[slotId].gameObject.SetActive(false);
+                EquipWeapon(i);
+                break;
+            }
+        }
+    }
+
+    public void SwapWeaonBox(int slotA, int slotB)
+    {
+        Weapon.WeaponStats aW = weapons[slotA];
+        Sprite aI = weaponBoxes[slotA].sprite;
+        weapons[slotA] = weapons[slotB];
+        weaponBoxes[slotA].sprite = weaponBoxes[slotB].sprite;
+        weapons[slotB] = aW;
+        weaponBoxes[slotB].sprite = aI;
+        if (activeWeapon == slotA)
+            activeWeapon = slotB;
+        else if (activeWeapon == slotB)
+            activeWeapon = slotA;
     }
 
     public void EquipWeapon(int slotId)
     {
-        if (slotId == activeWeapon)
+        if (slotId == activeWeapon || !weaponBoxes[slotId].gameObject.activeSelf)
             return;
         equipedWeapon.EquipWeapon(weapons[slotId], ref weapons[activeWeapon]);
         activeWeapon = slotId;
-        print("Euiped: " + weapons[slotId].name+"\nReplaced: " + weapons[activeWeapon].name);
+        //print("Euiped: " + weapons[slotId].name+"\nReplaced: " + weapons[activeWeapon].name);
+    }
+
+    /// <summary>
+    /// adds ammo to current weapon
+    /// </summary>
+    /// <param name="ammo">if -1 adds max ammo</param>
+    /// <returns></returns>
+    public int AddAmmo(int ammo)
+    {
+        if (ammo == -1)
+            ammo = (int)equipedWeapon.gun.maxammo;
+        int newammo = (int)equipedWeapon.gun.ammoleft + ammo;
+        if (newammo > (int)equipedWeapon.gun.maxammo)
+        {
+            equipedWeapon.gun.ammoleft = equipedWeapon.gun.maxammo;
+            return newammo - (int)equipedWeapon.gun.maxammo;
+        }
+        equipedWeapon.gun.ammoleft = newammo;
+        return newammo;
     }
 }

@@ -20,12 +20,12 @@ public class Weapon : MonoBehaviour {
         public float maxammo; //max ammo player can have for this gun
         public float curammo; //current ammo in magazine
         public float magazinesize; //max ammo in magazine
+        public float ammoleft; //remaining total ammo
         public enum AmmoType {STANDARD, ARMORPIERCING, EXPLOSIVE, NONE};
         public AmmoType ammotype;
         public enum TriggerType { AUTO, SEMI};
         public TriggerType triggertype;
         public float reloadtime;
-        public float ammoleft; //remaining total ammo
 
         // mainly for shotguns
         public float ammopershot;
