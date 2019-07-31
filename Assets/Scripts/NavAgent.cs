@@ -34,7 +34,7 @@ public class NavAgent : MonoBehaviour
     {
         path3D = new NavMeshPath();
         rb2d = GetComponent<Rigidbody2D>();
-
+        MaxMoveForce = rb2d.mass;
         repathTime = Time.time + RepathDelaySeconds;
     }
 
@@ -80,7 +80,7 @@ public class NavAgent : MonoBehaviour
             //Debug.DrawLine(transform.position, PathPoints[1], Color.cyan);
             //Debug.DrawRay(transform.position, transform.up, Color.green);
             //formula: movespeed = 0.5cos(x/30)+0.5
-            float MoveForce = Mathf.Clamp01((0.5f * Mathf.Cos(angleOffset/30) + 0.5f) * MaxMoveForce);
+            float MoveForce = /*Mathf.Clamp01*/((0.5f * Mathf.Cos(angleOffset/30) + 0.5f) * MaxMoveForce);
             Vector2 moveForceVector = vectorToNextPointNormalised * MoveForce;
             //print("MoveForce: " + MoveForce);
             //Debug.DrawRay(transform.position, moveForceVector, Color.yellow);

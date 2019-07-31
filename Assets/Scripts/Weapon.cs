@@ -89,7 +89,7 @@ public class Weapon : MonoBehaviour {
         bulletScript.damage = gun.damage;
         bulletScript.ammo = gun.ammotype;
         bulletScript.direction = bulletDir;
-        bullet.GetComponent<Rigidbody2D>().AddForce(new Vector2(bulletDir.x, bulletDir.y) * gun.muzzleVelocity, ForceMode2D.Impulse);
+        bullet.GetComponent<Rigidbody2D>().AddForce(new Vector2(bulletDir.x, bulletDir.y) * gun.muzzleVelocity/25, ForceMode2D.Impulse);
         bulletScript.velocity = bullet.GetComponent<Rigidbody2D>().velocity.magnitude;
 
         gun.curammo -= gun.ammopershot;
@@ -105,18 +105,35 @@ public class Weapon : MonoBehaviour {
 
     }
     
+    bool reloading = false;
     public bool Reload()
     {
         if (gun.ammotype != WeaponStats.AmmoType.NONE && gun.ammoleft <= 0)
             return false;
 
+        if (!reloading)
+        {
+            StartCoroutine(DelayedReload(gun.reloadtime));
+            reloading = true;
+        }
+        // Dispatch reload animation, call this after completion
+        //float reloadcost = gun.magazinesize - gun.curammo;
+        //float reloaded = gun.ammoleft > reloadcost ? reloadcost : gun.ammoleft;
+        //gun.curammo += reloaded;
+        //gun.ammoleft -= reloaded;
+        return true;
+    }
+    private IEnumerator DelayedReload(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         // Dispatch reload animation, call this after completion
         float reloadcost = gun.magazinesize - gun.curammo;
         float reloaded = gun.ammoleft > reloadcost ? reloadcost : gun.ammoleft;
         gun.curammo += reloaded;
         gun.ammoleft -= reloaded;
-        return true;
+        reloading = false;
     }
+
 
     public WeaponStats EquipWeapon(WeaponStats newWeapon, ref WeaponStats oldWeapon)
     {

@@ -7,18 +7,23 @@ public class MenuAutoPlayHandler : MonoBehaviour
     public BasicCharacterController playerController;
     public PlayerAI playerAI;
     public ZombieSpawner zombieSpawner;
+    public SpriteRenderer fadeSprite;
     
     Transform zombieContainer;
     float demoTime = 0;
     float demoDuration = 10;
+    float halfFadeDuration = 2;
+    Color fadeColour;
 
     private Vector2 cameraDir = new Vector2();
     private Vector2 cameraStart = new Vector2();
     private Vector2 cameraEnd = new Vector2();
+
     // Start is called before the first frame update
     void Start()
     {
         zombieContainer = zombieSpawner.transform;
+        fadeColour = fadeSprite.color;
         ResetWorld();
     }
 
@@ -34,9 +39,14 @@ public class MenuAutoPlayHandler : MonoBehaviour
         if (zombieContainer.childCount == 0 || demoTime >= demoDuration)
             ResetWorld();
 
+        if (demoTime >= demoDuration / 2)
+            fadeColour.a = Mathf.Lerp(0, 1, Mathf.Clamp((demoTime - demoDuration + halfFadeDuration) * (1 / halfFadeDuration), 0, 1));
+        else
+            fadeColour.a = Mathf.Lerp(0, 1, Mathf.Clamp(1 - demoTime * (1 / halfFadeDuration), 0, 1));
+        fadeSprite.color = fadeColour;
+
         //camera movement
         Camera.main.transform.position = (Vector3)playerAI.transform.position + Vector3.Lerp(cameraStart, cameraEnd, demoTime / demoDuration) + new Vector3(0,0,-10);
-
 
     }
 
@@ -63,7 +73,9 @@ public class MenuAutoPlayHandler : MonoBehaviour
         {
             Destroy(go);
         }
-        //refill ammo
-        print("Refilled " + UIController.Instance.AddAmmo(-1) + " ammo");
+
+        UIController.Instance.RemoveWeapon(1);
+        UIController.Instance.RemoveWeapon(2);
+        UIController.Instance.AddAmmo(-1);
     }
 }
