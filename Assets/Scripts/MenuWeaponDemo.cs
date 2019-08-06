@@ -20,12 +20,18 @@ public class MenuWeaponDemo : MonoBehaviour
         Weapon.WeaponStats ws = WeaponLoader.Instance.Load(weaponId);
         stats += ws.name + "\n";
         stats += "Damage: " + ws.damage + "\n";
-        stats += "Recoil: " + ws.recoil + "\n";
-        stats += "Accuracy: " + ws.accuracy + "\n";
-        stats += "Firerate: " + ws.firerate + "\n";
-        stats += "Magazine Size: " + ws.magazinesize + "\n";
-        stats += "Max Ammo: " + ws.maxammo + "\n";
-        stats += "Reload Speed: " + ws.reloadtime + "\n";
+        if (ws.type == Weapon.WeaponStats.WeaponType.GUN)
+        {
+            stats += "Recoil: " + ws.recoil + "\n";
+            stats += "Accuracy: " + (ws.accuracy == 0 ? "100" : (ws.accuracy/10*100).ToString()) + "%\n";
+            stats += "Firerate: " + 1/ws.firerate + "/s\n";
+            stats += "Magazine Size: " + ws.magazinesize + "\n";
+            stats += "Max Ammo: " + ws.maxammo + "\n";
+            stats += "Reload Speed: " + ws.reloadtime + "s\n";
+            stats += "Trigger Type: " + ws.triggertype.ToString() + "\n";
+        }
+
+
         weaponStatsText.text = stats;
     }
 }

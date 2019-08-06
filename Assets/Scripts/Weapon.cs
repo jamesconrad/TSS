@@ -11,7 +11,7 @@ public class Weapon : MonoBehaviour {
         [Tooltip("Gun roated by rand(-rec,rec)")]
         public float recoil;
         [Tooltip("Direction rotated by rand(-acc,acc)")]
-        public float accuracy;
+        public float accuracy;//max is 10
         [Tooltip("Seconds between rounds")]
         public float firerate;
 
@@ -31,6 +31,8 @@ public class Weapon : MonoBehaviour {
         public float ammopershot;
         public float bulletspershot;
 
+        public enum WeaponType {GUN, MELEE, THROWN};
+        public WeaponType type;
         public Sprite sprite;
 
         public Vector3 barrelExit;
@@ -42,10 +44,14 @@ public class Weapon : MonoBehaviour {
     public GameObject STDBullet;
     public bool saveToFile = false;
     private float firedelay = 0;
+    private Collider2D meleeCollider;
 	// Use this for initialization
 	void Start () {
         //force fetch from json
         gun = WeaponLoader.Instance.Load(0);
+        meleeCollider = gameObject.AddComponent<BoxCollider2D>();
+        meleeCollider.isTrigger = true;
+        meleeCollider.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -140,6 +146,20 @@ public class Weapon : MonoBehaviour {
         WeaponStats old = oldWeapon = gun;
         gun = newWeapon;
         GetComponent<SpriteRenderer>().sprite = newWeapon.sprite;
+        if (gun.type == WeaponStats.WeaponType.MELEE)
+        {
+            meleeCollider.bounds.Equals(newWeapon.sprite.bounds);
+        }
         return old;
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        Health hitHealth = collision.gameObject.GetComponent<Health>();
+        if (hitHealth == null)
+            return;
+        hitHealth.ChangeHP(-gun.damage);
+        Rigidbody2D rb2d = collision.gameObject.GetComponent<Rigidbody2D>();
+        rb2d.AddForce((rb2d.transform.position - transform.position) * gun.damage * 5, ForceMode2D.Impulse);
     }
 }

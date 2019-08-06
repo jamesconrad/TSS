@@ -49,13 +49,13 @@ public class PlayerAI : MonoBehaviour
 
         Vector2 direction = (target.position - transform.position).normalized;
         Vector2 moveVector = new Vector2(0, 0);
-        if ((target.position - transform.position).magnitude < 2.5)
-        {
-            moveVector = (-direction);
-        }
-        else if ((target.position - transform.position).magnitude > 5)
+        if ((target.position - transform.position).magnitude > 5 || weapon.gun.type == Weapon.WeaponStats.WeaponType.MELEE)
         {
             moveVector = direction;
+        }
+        else if ((target.position - transform.position).magnitude < 2.5)
+        {
+            moveVector = (-direction);
         }
 
         float lookAngleOffset = Vector2.SignedAngle(direction, (Vector2)transform.up);
