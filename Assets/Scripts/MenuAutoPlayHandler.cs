@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuAutoPlayHandler : MonoBehaviour
+public class MenuAutoPlayHandler : Singleton<MenuAutoPlayHandler>
 {
     public BasicCharacterController playerController;
     public PlayerAI playerAI;
@@ -50,7 +50,7 @@ public class MenuAutoPlayHandler : MonoBehaviour
 
     }
 
-    void ResetWorld()
+    public void ResetWorld()
     {
         //reset timer
         demoTime = 0;

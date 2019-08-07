@@ -33,6 +33,8 @@ public class Weapon : MonoBehaviour {
 
         public enum WeaponType {GUN, MELEE, THROWN};
         public WeaponType type;
+        public enum Animation {SHOOT, SWING, STAB, THROW};
+        public Animation animation;
         public Sprite sprite;
 
         public Vector3 barrelExit;
@@ -45,6 +47,7 @@ public class Weapon : MonoBehaviour {
     public bool saveToFile = false;
     private float firedelay = 0;
     private Collider2D meleeCollider;
+    private Animator animator;
 	// Use this for initialization
 	void Start () {
         //force fetch from json
@@ -52,7 +55,10 @@ public class Weapon : MonoBehaviour {
         meleeCollider = gameObject.AddComponent<BoxCollider2D>();
         meleeCollider.isTrigger = true;
         meleeCollider.enabled = false;
-	}
+        animator = GetComponent<Animator>();
+        animator.SetFloat("speedMultiplier", 1 / gun.firerate);
+        animator.SetInteger("animationId", (int)gun.animation + 1);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -103,6 +109,9 @@ public class Weapon : MonoBehaviour {
         //calculate and return recoil shit
         float spreadMod = Random.Range(-gun.recoil, gun.recoil);
         firedelay = gun.firerate;
+
+        animator.SetTrigger("attack");
+
         return Quaternion.Euler(new Vector3(0,0,spreadMod)) * direction;
     }
 
@@ -150,6 +159,9 @@ public class Weapon : MonoBehaviour {
         {
             meleeCollider.bounds.Equals(newWeapon.sprite.bounds);
         }
+        float speedMultiplier = 1 / gun.firerate;
+        animator.SetFloat("speedMultiplier", speedMultiplier < 2 ? 2.0f : speedMultiplier);
+        animator.SetInteger("animationId", (int)gun.animation + 1);
         return old;
     }
 

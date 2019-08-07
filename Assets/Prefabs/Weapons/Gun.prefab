@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8478271089919900029}
   - component: {fileID: 8616156023899204645}
   - component: {fileID: 1280063044704479307}
+  - component: {fileID: 9153005388759379995}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -54,12 +55,14 @@ MonoBehaviour:
     maxammo: 120
     curammo: 12
     magazinesize: 0
+    ammoleft: 12
     ammotype: 0
     triggertype: 0
     reloadtime: 2
-    ammoleft: 12
     ammopershot: 1
     bulletspershot: 1
+    type: 0
+    animation: 0
     sprite: {fileID: 1098179606456428539, guid: 18906f2fa1b7719489edafbca50ccbc7,
       type: 3}
     barrelExit: {x: 0, y: 0.25, z: 0}
@@ -117,3 +120,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &9153005388759379995
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2773566476828395915}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 440d188b382eb5c4682ddaf1349b2d92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
